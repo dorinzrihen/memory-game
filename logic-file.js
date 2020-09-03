@@ -95,15 +95,45 @@ function randomCards(number){
     return cardsList;
 }
 
+function addNewCard(cardContainer){
+    const flipCard = document.createElement('div');
+    flipCard.classList.add('flip-card');
+    const flipCardInner = document.createElement('div');
+    flipCardInner.classList.add('flip-card-inner');
+    const flipCardFront = document.createElement('div');
+    flipCardFront.classList.add('flip-card-front');
+    const imgSrc = document.createElement('img');
+    imgSrc.innerHTML = `<img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">`;
+
+    //back
+    const flipCardBack = document.createElement('div');
+    flipCardBack.classList.add('flip-card-back');
+
+
+    flipCardFront.appendChild(imgSrc);
+    flipCardInner.appendChild(flipCardFront);
+    flipCardInner.appendChild(flipCardBack);
+    flipCard.appendChild(flipCardInner);
+    cardContainer.appendChild(flipCard);
+}
+
+//main game oop
 function MemoryGame(cardsNumber){
     this.cards = randomCards(cardsNumber);
-    console.log(this.cards.length)
 }
 
 MemoryGame.prototype.setCards = function(){
-    
+    const columns = 3;
+    const rows = this.cards.length/columns;
+
+    const cardContainer = document.querySelector('.cards-game-container')
+    for(let i = 0; i<columns; i++){
+        for(let j = 0; j<rows; j++){
+            addNewCard(cardContainer);
+        }
+    }
 }
 
 
-const test = new MemoryGame(10);
-console.log(test)
+const test = new MemoryGame(12);
+test.setCards();

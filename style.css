@@ -4,7 +4,6 @@
     background-color: transparent;
     width: 200px;
     height: 200px;
-    border: 1px solid #f1f1f1;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
   }
   
@@ -86,4 +85,14 @@ button:hover{
 
 .game-header h3{
   text-decoration: underline;
+}
+
+/* main game */
+.cards-game-container{
+  height: calc(100vh - 75px);
+  background-color: rgba(0, 0, 255, 0.219);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
 }
