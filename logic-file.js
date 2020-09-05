@@ -341,6 +341,8 @@ function resetClock(){
     milliseconds=0;
     goodGuess = 0;
     attempts = 0; 
+    const attemptsDom = document.querySelector('.attempts-score');
+    attemptsDom.textContent = attempts;
 }
 
 const startGame = document.querySelector('.start-game');

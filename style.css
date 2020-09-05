@@ -31,7 +31,7 @@ button:hover{
  /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
  .scene {
     width: calc(90% /var(--repeat));
-    margin: 10px;
+    margin: 5px;
     height: var(--card-height);
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
   }
@@ -122,7 +122,6 @@ p{
 .cards-game-container{
   height: calc(100vh - 75px);
   background-color: #c9e4ca;
-  padding: 20px;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
