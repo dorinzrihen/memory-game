@@ -223,7 +223,6 @@ function addNewCard(cardContainer,card){
     flipCard.classList.add('scene');
     const flipCardInner = document.createElement('div');
     flipCardInner.classList.add('card');
-    flipCardInner.innerHTML = card.id;
     flipCardInner.setAttribute('index',card.index);
     flipCardInner.setAttribute('active',card.active);
     const flipCardFront = document.createElement('div');

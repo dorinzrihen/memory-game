@@ -1,0 +1,30 @@
+@media (max-width: 500px) {
+    .main-game{
+        display: flex;
+        flex-direction: column;
+      }
+
+    .cards-game-container{
+        height: 75vh;
+    }
+
+    .scene {
+        width: 20%;
+        margin: 1px;
+        height: calc(70vh/6);
+        perspective: 1000px; /* Remove this if you don't want the 3D effect */
+      }
+
+    .game-options{
+        height: calc(100vh - 75vh - 75px);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 10px;
+        background-color: #87bba2;
+    }
+
+    button{
+        height: 50px;
+      }
+  }
