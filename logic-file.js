@@ -8,6 +8,8 @@ let milliseconds=0;
 let playerNameWeb = "Anonymous"; 
 let goodGuess = 0;
 let attempts = 0; 
+let myMatchCards = [];
+let cardsObj;
 
 function updateAttempts(){
     attempts++;
@@ -15,10 +17,41 @@ function updateAttempts(){
     attemptsDom.textContent = attempts;
 }
 
+function winScreen(){
+    const winScreen = document.querySelector('.victory-page');
+    const winTime = document.querySelector('.current-time');
+    winTime.textContent = `${minutes}:${seconds}:${milliseconds}`
+    const winAtt = document.querySelector('.current-attempts');
+    winAtt.textContent = attempts;
+    const winPlayAgin = document.querySelector('.play-again');
+    winScreen.classList.add('show');
+    winPlayAgin.addEventListener('click',function(){
+        resetAll();
+        winScreen.remove();
+    })
+}
+
+function updateLocalStorage(){
+    const data = {
+        name:playerNameWeb,
+        attempts,
+    }
+    const cardNumber =  getCardsNumber();
+    if (localStorage.getItem(cardNumber)) {
+        localStorage.setItem(cardNumber,JSON.stringify(data));
+    }
+    else{
+        localStorage.setItem(cardNumber,JSON.stringify(data));
+    }
+}
+
 function updateGoodGuess(){
     goodGuess++;
-    if(goodGuess*2 === 12){
-        console.log("you made it")
+    if(goodGuess*2 === getCardsNumber()){
+        updateLocalStorage();
+        const cardContainer = document.querySelector('.cards-game-container')
+        cardContainer.innerHTML = "";
+        winScreen();
     }
 }
 
@@ -73,7 +106,6 @@ function arrAnimals(){
 
 function arrCars(){
     const pictures = [
-        'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1147&q=80',
         'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
         'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=689&q=80',
         'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80',
@@ -139,7 +171,7 @@ function getRandomPictures(numberOfRandomPictures){
     let myRandomPickNumber = []; //pick the random number list
     let myRandomPickSrc = [];
 
-    const pictures = getCradsType();
+    const pictures = getCardsType();
 
     while(myRandomPickNumber.length < numberOfRandomPictures){
         let r = Math.floor(Math.random() * pictures.length-1)+1;
@@ -191,6 +223,7 @@ function addNewCard(cardContainer,card){
     flipCard.classList.add('scene');
     const flipCardInner = document.createElement('div');
     flipCardInner.classList.add('card');
+    flipCardInner.innerHTML = card.id;
     flipCardInner.setAttribute('index',card.index);
     flipCardInner.setAttribute('active',card.active);
     const flipCardFront = document.createElement('div');
@@ -225,7 +258,24 @@ function flipBack(arr){
     }
 }
 
+function removeOptionFlipCards(){
+    const myCards = document.querySelectorAll('.card');
+
+    for(let i = 0; i<myCards.length ; i++){
+        myCards[i].removeEventListener('click',cardEventHandler);
+    }
+}
+
+function returnOptionFlipCards(){
+    const myCards = document.querySelectorAll('.card');
+
+    for(let i = 0; i<myCards.length ; i++){
+        myCards[i].addEventListener('click',cardEventHandler);
+    }
+}
+
 function checkIfMatch(arr ,cards){
+    
     console.log(arr);
     console.log(cards)
     let cardsId = [];
@@ -241,7 +291,6 @@ function checkIfMatch(arr ,cards){
     }
     console.log(cardsId);
     if(cardsId[0] === cardsId[1]){
-        console.log(arr[0].target.parentElement.getAttribute('active'));
         updateGoodGuess();
     }
     else{
@@ -249,7 +298,7 @@ function checkIfMatch(arr ,cards){
         arr[1].target.parentElement.classList.remove('is-flipped');
         updateAttempts();
     }
-   
+    returnOptionFlipCards();
 }
 
 
@@ -276,28 +325,28 @@ MemoryGame.prototype.setCards = function(){
 }
 MemoryGame.prototype.eventListener =function(){
     const myCards = document.querySelectorAll('.card');
-    let myMatchCards = this.cardPick;
-    let cards = this.cards;
-
-    function callBackMatch(){
-        checkIfMatch(myMatchCards,cards);
-        myMatchCards = [];
-    }
-
-
+    cardsObj = this.cards;
     for(let i = 0; i<myCards.length ; i++){
-        myCards[i].addEventListener('click',function(event){
-            event.currentTarget.classList.add('is-flipped');
-            myMatchCards.push(event);
-            if(myMatchCards.length === 2){
-                setTimeout(callBackMatch,1000);
-            }
-        })
+        myCards[i].addEventListener('click',cardEventHandler);
     }
 
 }
 
-function getCradsNumber(){
+function callBackMatch(){
+    checkIfMatch(myMatchCards,cardsObj);
+    myMatchCards = [];
+}
+
+function cardEventHandler(){
+    event.currentTarget.classList.add('is-flipped');
+    myMatchCards.push(event);
+    if(myMatchCards.length === 2){
+        removeOptionFlipCards();
+        setTimeout(callBackMatch,1000);
+    } 
+}
+
+function getCardsNumber(){
     if(document.getElementById('medium').checked){
         return 18;
     }
@@ -309,7 +358,7 @@ function getCradsNumber(){
     }
 }
 
-function getCradsType(){
+function getCardsType(){
     if(document.getElementById('cars').checked){
         return arrCars();
     }
@@ -335,7 +384,7 @@ function setName(){
     }
 }
 
-function resetClock(){
+function resetAll(){
     minutes=0;
     seconds=0;
     milliseconds=0;
@@ -345,17 +394,29 @@ function resetClock(){
     attemptsDom.textContent = attempts;
 }
 
+function getHighScore(){
+    let data = JSON.parse(localStorage.getItem(getCardsNumber()))
+    if(data){
+        const winnerName = document.querySelector('.winner-name');
+        const winnerScore = document.querySelector('.winner-score');
+        winnerName.textContent = data.name;
+        winnerScore.textContent = data.attempts;
+    }
+
+}
+
+
+
 const startGame = document.querySelector('.start-game');
 startGame.addEventListener('click',function(){
-    const number = getCradsNumber();
+    const number = getCardsNumber();
     setName();
+    getHighScore();
     const test = new MemoryGame(number);
     test.setCards();
     test.eventListener();
-    resetClock();
+    resetAll();
     timerLoop = setInterval(startClock,10);
 })
-
-
 
 

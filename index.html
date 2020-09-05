@@ -20,9 +20,14 @@
         <h3>Attempts</h3>
         <p class="attempts-score">0</p>
       </div>
-      <div>
+      <div class="high-score">
         <h3>High Score</h3>
-        <p>0</p>
+        <div>
+          <p>Name:</p><p class="winner-name"></p>
+        </div>
+        <div>
+          <p>Attempts:</p><p class="winner-score">0</p>
+        </div>
       </div>
 
       
@@ -54,9 +59,9 @@
     </main>
     <main class="victory-page">
       <h1>YOU MADE IT</h1>
-      <H2>SCORE:<span>0</span></H2>
-      <H2>Attempts:<span>0</span></H2>
-      <button>PLAY AGAIN</button>
+      <H2>Attempts:<span class="current-attempts">0</span></H2>
+      <H2>Time:<span class="current-time">0</span></H2>
+      <button class="play-again">PLAY AGAIN</button>
     </main>
 
       <script src="logic-file.js"></script>
